@@ -95,6 +95,7 @@ model Book {
   description   String
   genre         Genre    @default(GENERIC)
   language      String
+  price         Int
   
   // vendor Vendor? @relation(references: [id], fields: [vendorID])
 

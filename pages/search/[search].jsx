@@ -5,27 +5,8 @@ import SideBar from "../../components/sideBar";
 import Header from "../../components/Header";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
-import { prisma } from "../../lib/prisma";
 
-async function getSearch() {
-  const book = await prisma.user.create({
-    data: {
-      isbn: 6554984656546,
-      title: "i hate this",
-      author: "End Me",
-      description:
-        "I am going to literally, maybe not literally, end myself using a rusty spork",
-    },
-  });
-  console.log(book);
-  // return {
-  //   props: {
-  //     book,
-  //   },
-  // };
-}
-
-export default function Home() {
+export default function Home(bookData) {
   const handleSearchChange = (event) => {
     console.log("The search type has been updated: " + event.target.value);
   };
@@ -35,9 +16,52 @@ export default function Home() {
 
   toast((t) => <span>search: {search}</span>);
 
-  const handleClick = () => {
-    getSearch();
+  const test = {
+    isbn: 1365465464,
+    title: "Disappointed in Raejae",
+    author: "End Me",
+    description:
+      "im going to end myself with a rusty spoon because love is hard and unobtainable",
+    publishedDate: "12-3-2001",
+    language: "english",
   };
+
+  const temp = "dfgnlsdjnfsd";
+
+  const handleClick = () => {
+    toast.success("doing database query");
+    getSearch(search);
+  };
+
+  // async function getSearch(data) {
+  //   console.log(data);
+  //   try {
+  //     fetch("http://localhost:3000/api/test", {
+  //       body: JSON.stringify(data),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       method: "POST",
+  //     });
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
+
+  async function getSearch(search) {
+    // console.log(search);
+    try {
+      fetch("http://localhost:3000/api/search", {
+        body: JSON.stringify(search),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <div
@@ -52,8 +76,8 @@ export default function Home() {
           {/* <Banner /> */}
         </div>
         <div className="container-lg my-4">
-          <h1>This is a header</h1>
-          <p>This is text under the header</p>
+          <h1>Search: {search}</h1>
+          {/* <p>This is text under the header</p> */}
           <a onClick={handleClick}>add bogus to database</a>
           <form>
             <div className="input-group mb-3">
@@ -90,4 +114,16 @@ export default function Home() {
       </div>
     </div>
   );
+}
+
+export async function getStaticProps(context) {
+  return {
+    props: {
+      bookData,
+    },
+  };
+}
+
+export async function getStaticPaths() {
+  console.log(userData);
 }
