@@ -1,19 +1,43 @@
 import "bootstrap/dist/css/bootstrap.css";
-import "../components/product";
-import SearchView from "../components/searchView";
-import SideBar from "../components/sideBar";
-import Header from "../components/Header";
+import "../../components/product";
+import SearchView from "../../components/searchView";
+import SideBar from "../../components/sideBar";
+import Header from "../../components/Header";
 import toast, { Toaster } from "react-hot-toast";
-import { prisma } from "../lib/prisma";
+import { useRouter } from "next/router";
+import { prisma } from "../../lib/prisma";
+
+async function getSearch() {
+  const book = await prisma.user.create({
+    data: {
+      isbn: 6554984656546,
+      title: "i hate this",
+      author: "End Me",
+      description:
+        "I am going to literally, maybe not literally, end myself using a rusty spork",
+    },
+  });
+  console.log(book);
+  // return {
+  //   props: {
+  //     book,
+  //   },
+  // };
+}
 
 export default function Home() {
   const handleSearchChange = (event) => {
     console.log("The search type has been updated: " + event.target.value);
   };
 
-  let search = "unknown";
+  const router = useRouter();
+  const { search } = router.query;
 
   toast((t) => <span>search: {search}</span>);
+
+  const handleClick = () => {
+    getSearch();
+  };
 
   return (
     <div
@@ -30,6 +54,7 @@ export default function Home() {
         <div className="container-lg my-4">
           <h1>This is a header</h1>
           <p>This is text under the header</p>
+          <a onClick={handleClick}>add bogus to database</a>
           <form>
             <div className="input-group mb-3">
               <select
